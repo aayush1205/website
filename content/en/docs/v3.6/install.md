@@ -70,7 +70,12 @@ source by following these steps:
     ```
 
 ## Installation via OS packages
-*Disclaimer: etcd installations through OS package managers can deliver outdated versions since they are not being automatically maintained nor officially supported by etcd project. Therefore use OS packages with caution.*
+
+{{% alert title="Warning" color="warning" %}}
+
+etcd installations through OS package managers can deliver outdated versions since they are not being automatically maintained nor officially supported by etcd project. Therefore use OS packages with caution.*
+
+{{% /alert %}}
 
 There are various ways of installing etcd on different operating systems and these are just some examples how it can be done.
 
@@ -93,7 +98,11 @@ $ etcd --version
 
 ## Linux
 
+{{% alert title="Warning" color="warning" %}}
+
 Although installing etcd through many major Linux distributions' official repositories and package managers is possible, the published versions can be significantly outdated. So, installing this way is strongly discouraged.
+
+{{% /alert %}}
 
 The recommended way to install etcd on Linux is either through [pre-built binaries](#install-pre-built-binaries) or by using Homebrew.
 
@@ -124,13 +133,50 @@ The recommended way to install etcd on Linux is either through [pre-built binari
     ...
     ```
 
+## Docker
+
+etcd uses [`gcr.io/etcd-development/etcd`](https://gcr.io/etcd-development/etcd) as a
+primary container registry, and [`quay.io/coreos/etcd`](https://quay.io/coreos/etcd) as
+secondary.
+
+To run etcd using Docker:
+
+```sh
+ETCD_VER={{< param git_version_tag >}}
+
+rm -rf /tmp/etcd-data.tmp && mkdir -p /tmp/etcd-data.tmp && \
+  docker rmi gcr.io/etcd-development/etcd:${ETCD_VER} || true && \
+  docker run \
+  -p 2379:2379 \
+  -p 2380:2380 \
+  --mount type=bind,source=/tmp/etcd-data.tmp,destination=/etcd-data \
+  --name etcd-gcr-${ETCD_VER} \
+  gcr.io/etcd-development/etcd:${ETCD_VER} \
+  /usr/local/bin/etcd \
+  --name s1 \
+  --data-dir /etcd-data \
+  --listen-client-urls http://0.0.0.0:2379 \
+  --advertise-client-urls http://0.0.0.0:2379 \
+  --listen-peer-urls http://0.0.0.0:2380 \
+  --initial-advertise-peer-urls http://0.0.0.0:2380 \
+  --initial-cluster s1=http://0.0.0.0:2380 \
+  --initial-cluster-token tkn \
+  --initial-cluster-state new \
+  --log-level info \
+  --logger zap \
+  --log-outputs stderr
+
+docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcd --version
+docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdctl version
+docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdutl version
+docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdctl endpoint health
+docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdctl put foo bar
+docker exec etcd-gcr-${ETCD_VER} /usr/local/bin/etcdctl get foo
+```
+
 ## Installation as part of Kubernetes installation
 
-TBD---Help Wanted
-
-## Installation on Kubernetes, using a statefulset or helm chart
-
-The etcd project does not currently maintain a helm chart, however you can follow the instructions provided by [Bitnami's etcd Helm chart].
+- [Running etcd as a Kubernetes StatefulSet][]
 
 ## Installation check
 
@@ -141,8 +187,8 @@ For a slightly more involved sanity check of your installation, see
 [go]: https://golang.org/doc/install
 [Hardware recommendations]: {{< relref "op-guide/hardware" >}}
 [Quickstart]: {{< relref "quickstart" >}}
+[Running etcd as a Kubernetes StatefulSet]: {{< relref "op-guide/kubernetes" >}}
 [releases]: https://github.com/etcd-io/etcd/releases/
 [tagged-release]: https://github.com/etcd-io/etcd/releases/tag/{{< param git_version_tag >}}
 [Supported platforms]: {{< relref "op-guide/supported-platform" >}}
-[Bitnami's etcd Helm chart]: https://bitnami.com/stack/etcd/helm
 [Homebrew can run on Linux]: <https://docs.brew.sh/Homebrew-on-Linux>

@@ -13,11 +13,13 @@ You can configure etcd through the following:
 - **[Configuration file](#configuration-file)**
 
 {{% alert color="warning" %}}
+
 <i class="fas fa-exclamation-triangle mr-1"></i> **Caution**: If you mix-and-match configuration options, then the following
 rules apply.
 
 - Command-line flags take precedence over environment variables.
 - If you provide a _configuration file_ all command-line flags and environment variables are **ignored**.
+
 {{% /alert %}}
 
 ## Command-line flags
@@ -27,10 +29,12 @@ Flags are presented below using the format `--flag-name DEFAULT_VALUE`.
 The list of flags provided below may not be up-to-date due to ongoing development changes. For the latest available flags, run `etcd --help` or refer to the [etcd help][].
 
 {{% alert color="info" %}}
+
   **Note**: For details concerning new, updated, and deprecated {{< param version >}} flags,
   see [CHANGELOG-{{< psubstr version 1 >}}.md][changelog].
 
   [changelog]: https://github.com/etcd-io/etcd/blob/main/CHANGELOG/CHANGELOG-{{< psubstr version 1 >}}.md
+
 {{% /alert %}}
 
 ### Member
@@ -53,7 +57,9 @@ The list of flags provided below may not be up-to-date due to ongoing developmen
 --listen-peer-urls 'http://localhost:2380'
   List of URLs to listen on for peer traffic.
 --listen-client-urls 'http://localhost:2379'
-  List of URLs to listen on for client traffic.
+  List of URLs to listen on for client grpc traffic and http as long as --listen-client-http-urls is not specified.
+--listen-client-http-urls ''
+  List of URLs to listen on for http only client traffic. Enabling this flag removes http services from --listen-client-urls.
 --max-snapshots '5'
   Maximum number of snapshot files to retain (0 is unlimited).
 --max-wals '5'
@@ -121,10 +127,12 @@ The list of flags provided below may not be up-to-date due to ongoing developmen
   Phase of v2store deprecation. Allows to opt-in for higher compatibility mode.
   Supported values:
     'not-yet'                // Issues a warning if v2store have meaningful content (default in v3.5)
-    'write-only'             // Custom v2 state is not allowed (planned default in v3.6)
-    'write-only-drop-data'   // Custom v2 state will get DELETED !
-    'gone'                   // v2store is not maintained any longer. (planned default in v3.7)
+    'write-only'             // Custom v2 state is not allowed (default in v3.6 and v3.7)
+    'write-only-skip-check'  // Custom v2 state is not supported and, if present, will be ignored (available in v3.5.32+, v3.6.13+, and v3.7.0+). Use this option at your own risk.
+    'write-only-drop-data'   // Custom v2 state will get DELETED ! (planned default in v3.8)
+    'gone'                   // v2store is not maintained any longer.
 ```
+
 ### Security
 
 ```nocode
@@ -138,7 +146,7 @@ The list of flags provided below may not be up-to-date due to ongoing developmen
 --client-crl-file ''
   Path to the client certificate revocation list file.
 --client-cert-allowed-hostname ''
-  Allowed TLS hostname for client cert authentication.
+  Comma-separated list of SAN hostnames for client cert authentication.
 --trusted-ca-file ''
   Path to the client server TLS trusted CA cert file.
   Note setting this parameter will also automatically enable client cert authentication no matter what value is set for `--client-cert-auth`.
@@ -154,9 +162,9 @@ The list of flags provided below may not be up-to-date due to ongoing developmen
 --peer-trusted-ca-file ''
   Path to the peer server TLS trusted CA file.
 --peer-cert-allowed-cn ''
-  Required CN for client certs connecting to the peer endpoint.
+  Comma-separated list of allowed CNs for inter-peer TLS authentication.
 --peer-cert-allowed-hostname ''
-  Allowed TLS hostname for inter peer authentication.
+  Comma-separated list of allowed SAN hostnames for inter-peer TLS authentication.
 --peer-auto-tls 'false'
   Peer TLS using self-generated certificates if --peer-key-file and --peer-cert-file are not provided.
 --self-signed-cert-validity '1'
@@ -225,7 +233,9 @@ The list of flags provided below may not be up-to-date due to ongoing developmen
 ### v2 Proxy
 
 {{% alert color="warning" %}}
+
 **<i class="fas fa-exclamation-triangle mr-1"></i> Note**: flags will be deprecated in v3.6.
+
 {{% /alert %}}
 
 
@@ -270,7 +280,9 @@ The list of flags provided below may not be up-to-date due to ongoing developmen
 ### Unsafe features
 
 {{% alert color="warning" %}}
+
 **<i class="fas fa-exclamation-triangle mr-1"></i> Warning**: using unsafe features may break the guarantees given by the consensus protocol!
+
 {{% /alert %}}
 
 ```nocode
@@ -287,6 +299,29 @@ flag names and values are the flag values.
 In order to use this file, specify the file path as a value to the `--config-file` flag or `ETCD_CONFIG_FILE` environment variable.
 
 For an example, see the [etcd.conf.yml sample][].
+
+{{% alert title="Note" color="info" %}}
+Duration fields such as `--grpc-keepalive-min-time`, `--grpc-keepalive-interval`,
+`--grpc-keepalive-timeout`, `--backend-batch-interval`,
+`--experimental-corrupt-check-time`,
+`--experimental-watch-progress-notify-interval`, and
+`--experimental-warning-apply-duration` accept human-readable strings (e.g.
+`10m`, `5s`) when passed as command-line flags, but in a configuration file they
+only accept **integer values representing nanoseconds**. This is a
+[known Go standard library limitation](https://github.com/golang/go/issues/10275)
+where `time.Duration` is unmarshaled as a plain integer.
+
+For example, to set a 10-minute watch progress notify interval in a config file:
+
+```yaml
+# Correct: 10 minutes in nanoseconds
+experimental-watch-progress-notify-interval: 600000000000
+
+# Incorrect: will produce an unmarshal error
+experimental-watch-progress-notify-interval: '10m'
+```
+
+{{% /alert %}}
 
 [etcd help]: https://github.com/etcd-io/etcd/blob/main/server/etcdmain/help.go
 [etcd.conf.yml sample]: https://github.com/etcd-io/etcd/blob/main/etcd.conf.yml.sample

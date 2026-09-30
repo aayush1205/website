@@ -10,8 +10,11 @@ cluster of etcd:
  1. Install etcd from pre-built binaries or from source. For details, see
     [Install][].
 
-    {{% alert color="warning" %}}**Important**: Ensure that you perform the last
+    {{% alert color="warning" %}}
+
+    **Important**: Ensure that you perform the last
     step of the installation instructions to verify that `etcd` is in your path.
+
     {{% /alert %}}
 
  2. Launch `etcd`:
@@ -22,9 +25,13 @@ cluster of etcd:
     ⋮
     ```
 
-    {{% alert color="info" %}}**Note**: The output produced by `etcd` are
+    {{% alert color="info" %}}
+
+    **Note**: The output produced by `etcd` are
     [logs](../op-guide/configuration/#logging) &mdash; info-level logs can
-    be ignored. {{% /alert %}}
+    be ignored.
+
+    {{% /alert %}}
 
  3. From **another terminal**, use `etcdctl` to set a key:
 
@@ -45,12 +52,15 @@ cluster of etcd:
 
 Learn about more ways to configure and use etcd from the following pages:
 
-- Explore the gRPC [API][].
-- Set up a [multi-machine cluster][clustering].
-- Learn how to [configure][] etcd.
-- Find [language bindings and tools][integrations].
-- Use TLS to [secure an etcd cluster][security].
-- [Tune etcd][tuning].
+- If you are a developer:
+  - Explore the gRPC [API][].
+  - Find [language bindings and tools][integrations].
+
+- If you are an operator or admin:
+  - Set up a [multi-machine cluster][clustering].
+  - Learn how to [configure][] etcd.
+  - Use TLS to [secure an etcd cluster][security].
+  - [Tune etcd][tuning].
 
 [api]: /docs/{{< param version >}}/learning/api
 [clustering]: /docs/{{< param version >}}/op-guide/clustering

@@ -105,7 +105,7 @@ Note that in the case of etcd keys, it can be locked efficiently because of the 
 [consul-json]: https://www.consul.io/api-docs#formatted-json-output
 [consul-linread]: https://www.consul.io/api-docs#consistency
 [consul-lock]: https://www.consul.io/commands/lock
-[consul-reconfig]: https://learn.hashicorp.com/tutorials/consul/add-remove-servers?in=consul/day-2-operations
+[consul-reconfig]: https://developer.hashicorp.com/consul/tutorials/datacenter-operations/add-remove-servers
 [consul-txn]: https://www.consul.io/api/kv#txn
 [consul-watch]: https://www.consul.io/docs/dynamic-app-config/watches
 [container-linux]: https://coreos.com/why
@@ -128,7 +128,7 @@ Note that in the case of etcd keys, it can be locked efficiently because of the 
 [fencing]: https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html
 [grpc]: https://www.grpc.io
 [kubernetes]: https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
-[lease]: https://web.stanford.edu/class/cs240/readings/89-leases.pdf
+[lease]: https://web.stanford.edu/class/cs240/readings/leases.pdf
 [locksmith]: https://github.com/coreos/locksmith
 [newsql-leader]: http://dl.acm.org/citation.cfm?id=2960999
 [physicalclock]: https://web.archive.org/web/20190725151657/http://www.dainf.cefetpr.br/~tacla/SDII/PracticalUseOfClocks.pdf

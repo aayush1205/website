@@ -5,8 +5,9 @@ description: Processes, checklists, and notes on downgrading etcd from 3.5 to 3.
 ---
 
 In the general case, downgrading from etcd 3.5 to 3.4 can be a zero-downtime, rolling downgrade:
- - one by one, stop the etcd 3.5 processes and replace them with etcd 3.4 processes
- - after starting any 3.4 processes, new features in 3.5 are not longer available to the cluster
+
+- one by one, stop the etcd 3.5 processes and replace them with etcd 3.4 processes
+- after starting any 3.4 processes, new features in 3.5 are not longer available to the cluster
 
 Before [starting a downgrade](#downgrade-procedure), read through the rest of this guide to prepare.
 
@@ -14,7 +15,9 @@ Before [starting a downgrade](#downgrade-procedure), read through the rest of th
 
 content/en/docs/v3.5/op-guide/authentication/rbac.md
 
-**NOTE:** If your cluster enables auth, rolling downgrade from 3.5 isn't supported because 3.5 [changes a format of WAL entries related to auth](https://github.com/etcd-io/etcd/pull/11943). You can follow the [authentification instructions](../../op-guide/authentication/rbac/) to disable auth, and delete all users first.
+{{% alert title="Note" color="warning" %}}
+If your cluster enables auth, rolling downgrade from 3.5 isn't supported because 3.5 [changes a format of WAL entries related to auth](https://github.com/etcd-io/etcd/pull/11943). You can follow the [authentification instructions](../../op-guide/authentication/rbac/) to disable auth, and delete all users first.
+{{% /alert %}}
 
 Highlighted breaking changes from 3.5 to 3.4:
 
@@ -22,7 +25,9 @@ Highlighted breaking changes from 3.5 to 3.4:
 
 If you are using any of the following flags in your 3.5 configurations, make sure to remove, rename, or change the default value when downgrading to 3.4.
 
-**NOTE** The diff is based on version 3.5.14 and v.3.4.33. The actual diff would be dependent on your patch version, check with `diff <(etcd-3.5/bin/etcd -h | grep \\-\\-) <(etcd-3.4/bin/etcd -h | grep \\-\\-)` first.
+{{% alert title="Note" color="info" %}}
+The diff is based on version 3.5.14 and v.3.4.33. The actual diff would be dependent on your patch version, check with `diff <(etcd-3.5/bin/etcd -h | grep \\-\\-) <(etcd-3.4/bin/etcd -h | grep \\-\\-)` first.
+{{% /alert %}}
 
 ```diff
 # flags not available in 3.4
@@ -163,7 +168,9 @@ etcdctl --endpoints=localhost:2379,localhost:22379,localhost:32379 endpoint stat
 +-----------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
 COMMENT
 ```
+
 If the server to be stopped is the leader, you can avoid some downtime by `move-leader` to another server before stopping this server.
+
 ```bash
 etcdctl --endpoints=localhost:2379,localhost:22379,localhost:32379 move-leader 91bc3c398fb3c146
 
@@ -199,8 +206,8 @@ When each etcd process is stopped, expected errors will be logged by other clust
 Restart the etcd server with same configuration but with the new etcd binary and `--next-cluster-version-compatible`.
 
 ```diff
--etcd-old --name s1 \
-+etcd-new --name s1 \
+-etcd-3.5/bin --name s1 \
++etcd-3.4/bin --name s1 \
   --data-dir /tmp/etcd/s1 \
   --listen-client-urls http://localhost:2379 \
   --advertise-client-urls http://localhost:2379 \
@@ -214,6 +221,7 @@ Restart the etcd server with same configuration but with the new etcd binary and
 
 The new 3.4 etcd will publish its information to the cluster. At this point, cluster will start to operate as 3.4 protocol, which is the lowest common version.
 
+```bash
 > `{"level":"info","ts":"2024-05-13T21:05:43.981445Z","caller":"membership/cluster.go:561","msg":"set initial cluster version","cluster-id":"ef37ad9dc622a7c4","local-member-id":"8211f1d0f64f3269","cluster-version":"3.0"}`
 
 > `{"level":"info","ts":"2024-05-13T21:05:43.982188Z","caller":"api/capability.go:77","msg":"enabled capabilities for version","cluster-version":"3.0"}`
@@ -225,6 +233,7 @@ The new 3.4 etcd will publish its information to the cluster. At this point, clu
 > `{"level":"info","ts":"2024-05-13T21:05:44.000672Z","caller":"etcdserver/server.go:2152","msg":"published local member to cluster through raft","local-member-id":"8211f1d0f64f3269","local-member-attributes":"{Name:infra1 ClientURLs:[http://127.0.0.1:2379]}","request-path":"/0/members/8211f1d0f64f3269/attributes","cluster-id":"ef37ad9dc622a7c4","publish-timeout":"7s"}`
 
 > `{"level":"info","ts":"2024-05-13T21:05:46.452631Z","caller":"membership/cluster.go:549","msg":"updated cluster version","cluster-id":"ef37ad9dc622a7c4","local-member-id":"8211f1d0f64f3269","from":"3.5","from":"3.4"}`
+```
 
 Verify that each member, and then the entire cluster, becomes healthy with the new 3.4 etcd binary:
 
@@ -239,7 +248,7 @@ COMMENT
 
 Un-downgraded members will log info like the following
 
-```
+```bash
 {"level":"info","ts":"2024-05-13T21:05:46.450764Z","caller":"etcdserver/server.go:2633","msg":"updating cluster version using v2 API","from":"3.5","to":"3.4"}
 {"level":"info","ts":"2024-05-13T21:05:46.452419Z","caller":"membership/cluster.go:576","msg":"updated cluster version","cluster-id":"ef37ad9dc622a7c4","local-member-id":"91bc3c398fb3c146","from":"3.5","to":"3.4"}
 {"level":"info","ts":"2024-05-13T21:05:46.452547Z","caller":"etcdserver/server.go:2652","msg":"cluster version is updated","cluster-version":"3.4"}

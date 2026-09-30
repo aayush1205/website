@@ -147,6 +147,18 @@ After this, etcd is running with authentication enabled. To disable it for any r
 $ etcdctl --user root:rootpw auth disable
 ```
 
+## Security Scope of Authentication
+
+When authentication is enabled with `etcdctl auth enable`, it protects the V3 gRPC API operations (get, put, delete, watch, etc.).
+
+The `/metrics` and `/health` HTTP endpoints operate on a separate handler and are **not** protected by V3 RBAC authentication. This design allows Prometheus and load balancers to scrape metrics without requiring gRPC authentication, while still protecting the key-value data.
+
+To secure these observability endpoints:
+
+- Enable mTLS with `--cert-file`, `--key-file`, and `--client-cert-auth`
+- Or bind metrics to a private interface using `--listen-metrics-urls`
+- Or use network policies/firewall rules to restrict access
+
 ## Using `etcdctl` to authenticate
 
 `etcdctl` supports a similar flag as `curl` for authentication.
@@ -174,6 +186,10 @@ $ etcdctl user add myusername --no-password
 ```
 
 Such a user can only be [authenticated with TLS Common Name](#using-tls-common-name).
+
+{{% alert title="Note" %}}
+etcd does not support authentication with an empty password via `--user username:`. For example, a user created with an empty password, such as `etcdctl user add anonymous:''`, cannot authenticate through username/password requests and requests such as `etcdctl --user anonymous: get foo` fail with `user name is empty`.
+{{% /alert %}}
 
 Otherwise, all `etcdctl` commands remain the same. Users and roles can still be created and modified, but require authentication by a user with the root role.
 

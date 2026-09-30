@@ -19,3 +19,15 @@ get-link-checker:
 
 clean:
 	rm -rf $(HTMLTEST_DIR) public/* resources
+
+.PHONY: update-release-version
+update-release-version:
+ifndef LATEST_VERSION
+	@echo "LATEST_VERSION needs to be specified" && exit 1
+else
+	./scripts/update_release_version.sh "$(LATEST_VERSION)"
+endif
+
+.PHONY: markdown-diff-lint
+markdown-diff-lint:
+	./scripts/markdown_diff_lint.sh

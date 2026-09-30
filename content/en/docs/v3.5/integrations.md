@@ -4,7 +4,7 @@ weight: 1300
 description: A listing of etcd tools and client libraries
 ---
 
-Note that third-party libraries and tools (not hosted on https://github.com/etcd-io) mentioned below are not tested or maintained by the etcd team. Before using them, users are recommended to read and investigate them.
+Note that third-party libraries and tools (not hosted on [etcd-io main repository](https://github.com/etcd-io)) mentioned below are not tested or maintained by the etcd team. Before using them, users are recommended to read and investigate them.
 
 ## Tools
 
@@ -18,6 +18,8 @@ Note that third-party libraries and tools (not hosted on https://github.com/etcd
 - [etcd-viewer](https://github.com/nikfoundas/etcd-viewer) - An etcd key-value store editor/viewer written in Java
 - [etcdtool](https://github.com/mickep76/etcdtool) - Export/Import/Edit etcd directory as JSON/YAML/TOML and Validate directory using JSON schema
 - [etcdloadtest](https://github.com/sinsharat/etcdloadtest) - A command line load test client for etcd version 3.0 and above.
+- [etcd-tui](https://github.com/olamilekan000/etcd-tui) - A modern terminal user interface (TUI) for interacting with your etcd database. Navigate keys, view values, filter data, and manage your etcd cluster directly from your terminal.
+- [etcdfinder](https://etcdfinder.github.io) - A lightning-fast, modern web UI for etcd with instant search. Supports both etcd v2 and v3.
 - [lucas](https://github.com/ringtail/lucas) - A web-based key-value viewer for kubernetes etcd3.0+ cluster.
 - [etcd-manager](https://etcdmanager.io) - A modern, efficient, multi-platform and free etcd 3.x GUI & client tool. Available for Windows, Linux and Mac.
 - [etcd-backup-restore](https://github.com/gardener/etcd-backup-restore) - Utility to periodically and incrementally backup and restore the etcd.
@@ -25,6 +27,7 @@ Note that third-party libraries and tools (not hosted on https://github.com/etcd
 - [etcdadm](https://github.com/kubernetes-sigs/etcdadm) - A command-line tool for operating an etcd cluster.
 - [etcd-defrag](https://github.com/ahrtr/etcd-defrag) - An easier to use and smarter etcd defragmentation tool.
 - [etcdhelper](https://github.com/tsonglew/intellij-etcdhelper) - An intellij platform plugin for etcd.
+- [etcd-workbench](https://github.com/tzfun/etcd-workbench) - A free and powerful ui client for etcd v3. Provides desktop application and web packages.
 
 ## Libraries
 
@@ -44,7 +47,7 @@ The sections below list etcd client libraries by language.
 - [justinsb/jetcd](https://github.com/justinsb/jetcd)
 - [diwakergupta/jetcd](https://github.com/diwakergupta/jetcd) - Supports v2
 - [jurmous/etcd4j](https://github.com/jurmous/etcd4j) - Supports v2, Async/Sync, waits and SSL
-- [AdoHe/etcd4j](http://github.com/AdoHe/etcd4j) - Supports v2 (enhance for real production cluster)
+- [AdoHe/etcd4j](https://github.com/AdoHe/etcd4j) - Supports v2 (enhance for real production cluster)
 - [cdancy/etcd-rest](https://github.com/cdancy/etcd-rest) - Uses jclouds to provide a complete implementation of v2 API.
 - [IBM/etcd-java](https://github.com/IBM/etcd-java)
 
@@ -95,7 +98,7 @@ The sections below list etcd client libraries by language.
 - [edwardcapriolo/etcdcpp](https://github.com/edwardcapriolo/etcdcpp) - Supports v2
 - [suryanathan/etcdcpp](https://github.com/suryanathan/etcdcpp) - Supports v2 (with waits)
 - [nokia/etcd-cpp-api](https://github.com/nokia/etcd-cpp-api) - Supports v2
-- [nokia/etcd-cpp-apiv3](https://github.com/nokia/etcd-cpp-apiv3) - Supports v3
+- [etcd-cpp-apiv3/etcd-cpp-apiv3](https://github.com/etcd-cpp-apiv3/etcd-cpp-apiv3) - Supports v3
 
 ### Clojure
 

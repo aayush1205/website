@@ -8,7 +8,7 @@ Users mostly interact with etcd by putting or getting the value of a key. This s
 
 The API version used by etcdctl to speak to etcd may be set to version `2` or `3` via the `ETCDCTL_API` environment variable. By default, etcdctl on master (3.4) uses the v3 API and earlier versions (3.3 and earlier) default to the v2 API.
 
-Note that any key that was created using the v2 API will not be able to be queried via the v3 API.  A v3 API ```etcdctl get``` of a v2 key will exit with 0 and no key data, this is the expected behaviour.
+Note that any key that was created using the v2 API will not be able to be queried via the v3 API. A v3 API ```etcdctl get``` of a v2 key will exit with 0 and no key data, this is the expected behaviour.
 
 
 ```bash
@@ -47,7 +47,9 @@ $ etcdctl put foo1 bar1 --lease=1234abcd
 OK
 ```
 
-Note: The lease id `1234abcd` in the above command refers to id returned on creating the lease of 10s. This id can then be attached to the key.
+{{% alert title="Note" color="info" %}}
+The lease id `1234abcd` in the above command refers to id returned on creating the lease of 10s. This id can then be attached to the key.
+{{% /alert %}}
 
 ## Read keys
 
@@ -97,7 +99,9 @@ foo2
 bar2
 ```
 
-Note that `foo3` is excluded since the range is over the half-open interval `[foo, foo3)`, excluding `foo3`.
+{{% alert title="Note" color="info" %}}
+`foo3` is excluded since the range is over the half-open interval `[foo, foo3)`, excluding `foo3`.
+{{% /alert %}}
 
 Here is the command to range over all keys prefixed with `foo`:
 
@@ -378,8 +382,9 @@ $ progress
 progress notify: 3
 ```
 
-Note: The revision number in the progress notify response is the revision from the local etcd server node that the watch stream is connected to. If this node is partitioned and not part of quorum, this progress notify revision might be lower than
-than the revision returned by a quorum read against a non-partitioned etcd server node.
+{{% alert title="Note" color="info" %}}
+The revision number in the progress notify response is the revision from the local etcd server node that the watch stream is connected to. If this node is partitioned and not part of quorum, this progress notify revision might be lower than the revision returned by a quorum read against a non-partitioned etcd server node.
+{{% /alert %}}
 
 ## Compacted revisions
 
@@ -396,7 +401,9 @@ $ etcdctl get --rev=4 foo
 Error:  rpc error: code = 11 desc = etcdserver: mvcc: required revision has been compacted
 ```
 
-Note: The current revision of etcd server can be found using get command on any key (existent or non-existent) in json format. Example is shown below for mykey which does not exist in etcd server:
+{{% alert title="Note" color="info" %}}
+The current revision of etcd server can be found using get command on any key (existent or non-existent) in json format. Example is shown below for mykey which does not exist in etcd server:
+{{% /alert %}}
 
 ```bash
 $ etcdctl get mykey -w=json

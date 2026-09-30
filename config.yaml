@@ -41,17 +41,21 @@ imaging:
 languages:
   en:
     title: etcd
-    description: >-
-      A distributed, reliable key-value store for the most critical data of a
-      distributed system
     languageName: English
     contentDir: content/en
     weight: 1
+    params:
+      description: >-
+        A distributed, reliable key-value store for the most critical data of a
+        distributed system
 
 markup:
   goldmark:
     renderer:
       unsafe: true
+    extensions:
+      typographer:
+        enDash: '--'
   highlight:
     # See a complete list of available styles at https://xyproto.github.io/splash/docs/all.html
     style: tango
@@ -99,8 +103,18 @@ params:
   # Menu title if your navbar has a versions selector to access old versions of your site.
   # This menu appears only if you have at least one [params.versions] set.
   version_menu: Versions
-  latest_stable_version: v3.5
+  latest_stable_version: v3.7
+  version:
+
+    deprecation_warning: >-
+      This version of etcd is no longer supported. For the latest version, please see the [latest stable version](/docs/latest/).
   versions:
+    - version: v3.8
+      url: /docs/v3.8/
+
+    - version: v3.7
+      url: /docs/v3.7/
+
     - version: v3.6
       url: /docs/v3.6/
 
@@ -127,6 +141,7 @@ params:
     sidebar_menu_compact: true
     sidebar_search_disable: true
     navbar_logo: true
+    navbar_theme: dark
     footer_about_enable: false
     navbar_translucent_over_cover_disable: true
 
@@ -199,5 +214,3 @@ menu:
       pageref: /blog/
     - name: Install
       url: /docs/latest/install/
-    - name: Play
-      url: http://play.etcd.io/play
